@@ -1,0 +1,4 @@
+Bootstrap 5 cdn: https://getbootstrap.com/docs/5.0/getting-started/introduction/
+(copy css va js)
+w3school bootstrap 5: https://www.w3schools.com/bootstrap5/bootstrap_cards.php
+Mk Mysql nhà tru?ng: Admin@123 => Ðã t?o saledb
