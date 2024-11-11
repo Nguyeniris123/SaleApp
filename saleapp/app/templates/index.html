@@ -10,6 +10,7 @@
             crossorigin="anonymous"></script>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}"/>
 </head>
+
 <body>
 <nav class="navbar navbar-expand-sm bg-dark navbar-dark">
     <div class="container-fluid">
@@ -18,21 +19,26 @@
             <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="collapsibleNavbar">
-            <ul class="navbar-nav">
+            <ul class="navbar-nav me-auto">
                 <li class="nav-item">
                     <a class="nav-link" href="/">Trang chủ</a>
                 </li>
                 {% for c in categories %}
                 <li class="nav-item">
-                    <a class="nav-link" href="#">{{ c.name }}</a>
+                    <a class="nav-link" href="/?category_id={{ c.id }}">{{ c.name }}</a>
                 </li>
                 {% endfor %}
             </ul>
+            <form method="get" action="/" class="d-flex">
+                <input class="form-control me-2" type="text" name="kw" placeholder="Tìm sản phẩm">
+                <button class="btn btn-primary" type="submit">Tìm</button>
+            </form>
         </div>
     </div>
 </nav>
 
 <main class="container">
+    {% if products %}
     <div class="row">
         {% for p in products %}
         <div class="col-sm-4 col-md-3 col-12 p-2">
@@ -48,6 +54,10 @@
         </div>
         {% endfor %}
     </div>
+    {% else %}
+    <div class="alert alert-info"> Không có sản phẩm nào!!!</div>
+    {% endif %}
+
 </main>
 </body>
 </html>
