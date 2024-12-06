@@ -1,6 +1,7 @@
 from app.models import Category, Product, User
-from app import app
+from app import app, db
 import hashlib
+import cloudinary.uploader
 
 def load_categories():
     return Category.query.order_by('id').all()
@@ -27,3 +28,12 @@ def auth_user(username, password):
 
 def get_user_by_id(id):
     return User.query.get(id)
+
+def add_user(name, username, password, avatar=None):
+    password = str(hashlib.md5(password.encode('utf-8')).hexdigest())
+    u = User(name=name, username=username, password=password)
+    if avatar:
+        res = cloudinary.uploader.upload(avatar)
+        u.avatar = res.get('secure_url')
+    db.session.add(u)
+    db.session.commit()
