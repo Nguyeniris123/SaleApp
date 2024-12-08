@@ -21,7 +21,7 @@ def load_products(cate_id=None, kw=None, page=1):
 def count_products():
     return Product.query.count()
 
-def auth_user(username, password):
+def auth_user(username, password, role=None):
     password = str(hashlib.md5(password.encode('utf-8')).hexdigest())
     return User.query.filter(User.username.__eq__(username),
                              User.password.__eq__(password)).first()
