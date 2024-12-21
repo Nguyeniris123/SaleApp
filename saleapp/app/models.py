@@ -1,8 +1,9 @@
-from sqlalchemy import Column, Integer, String, Float, Boolean, ForeignKey, Enum
+from sqlalchemy import Column, Integer, String, Float, Boolean, ForeignKey, Enum, DateTime
 from sqlalchemy.orm import relationship
 from app import db, app
 from enum import Enum as RoleEnum
 from flask_login import UserMixin
+from datetime import datetime
 
 
 class UserRole(RoleEnum):
@@ -18,6 +19,8 @@ class User(db.Model, UserMixin):
     avatar = Column(String(100),
                     default='https://res.cloudinary.com/dxxwcby8l/image/upload/v1646729533/zuur9gzztcekmyfenkfr.jpg')
     user_role = Column(Enum(UserRole), default=UserRole.USER)
+    receipts = relationship('Receipt', backref='user', lazy=True)
+    comments = relationship('Comment', backref='user', lazy=True)
 
 
 class Category(db.Model):
@@ -37,9 +40,34 @@ class Product(db.Model):
     image = Column(String(100), nullable=True)
     active = Column(Boolean, default=True)
     category_id = Column(Integer, ForeignKey(Category.id), nullable=False)
+    details = relationship('ReceiptDetails', backref='product', lazy=True)
+    comments = relationship('Comment', backref='product', lazy=True)
 
     def __str__(self):
         return self.name
+
+
+class Receipt(db.Model):
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    user_id = Column(Integer, ForeignKey(User.id), nullable=False)
+    created_date = Column(DateTime, default=datetime.now())
+    details = relationship('ReceiptDetails', backref='receipt', lazy=True)
+
+
+class ReceiptDetails(db.Model):
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    quantity = Column(Integer, default=0)
+    unit_price = Column(Float, default=0)
+    product_id = Column(Integer, ForeignKey(Product.id), nullable=False)
+    receipt_id = Column(Integer, ForeignKey(Receipt.id), nullable=False)
+
+
+class Comment(db.Model):
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    content = Column(String(255), nullable=False)
+    user_id = Column(Integer, ForeignKey(User.id), nullable=False)
+    product_id = Column(Integer, ForeignKey(Product.id), nullable=False)
+    created_date = Column(DateTime, default=datetime.now())
 
 
 if __name__ == '__main__':
@@ -161,4 +189,10 @@ if __name__ == '__main__':
             prod = Product(**p)
             db.session.add(prod)
 
+        db.session.commit()
+
+        c1 = Comment(content='good', user_id=1, product_id=1)
+        c2 = Comment(content='nice', user_id=1, product_id=1)
+        c3 = Comment(content='excellent', user_id=1, product_id=1)
+        db.session.add_all([c1, c2, c3])
         db.session.commit()
