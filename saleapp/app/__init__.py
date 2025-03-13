@@ -14,8 +14,8 @@ db = SQLAlchemy(app=app)
 login = LoginManager(app=app)
 
 cloudinary.config(
-    cloud_name="dxxwcby8l",
-    api_key="448651448423589",
-    api_secret="ftGud0r1TTqp0CGp5tjwNmkAm-A",  # Click 'View API Keys' above to copy your API secret
+    cloud_name="dnwyvuqej",
+    api_key="559324578186686",
+    api_secret="tjXbrfktUPN8lYMmE9SN-33QXjc",  # Click 'View API Keys' above to copy your API secret
     secure=True
 )
